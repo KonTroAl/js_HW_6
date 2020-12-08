@@ -5,50 +5,39 @@
 
 "use strict"
 
-const Product = [
-    { name: 'PS', cost: 47000, num: 3 },
-    { name: 'Xbox', cost: 46000, num: 4 },
-    { name: 'PC', cost: 110000, num: 2 },
+let Product = [
+    { name: 'PS', cost: 47000, num: 0 },
+    { name: 'Xbox', cost: 46000, num: 0 },
+    { name: 'PC', cost: 110000, num: 0 },
+    { name: 'Iphone_12_Pro_Max', cost: 139000, num: 0 },
 ]
 
-let Basket_Product = []
-
-let is_empty = false
-
 let basket = {
-    Basket_Product,
+    Product,
     countBasketPrice() {
         let a = 0;
         let res = 0;
         let is_num = true;
         let count = 0;
-        for (let i = 0; i < Basket_Product.length; i++) {
-            a = (Basket_Product[i]["cost"] * Basket_Product[i]["num"]);
-            if (isNaN(a)) {
-                is_num = false;
-                break;
+        for (let i = 0; i < Product.length; i++) {
+            a = (Product[i]["cost"] * Product[i]["num"]);
+            if (a != 0) {
+                count = count + Product[i]["num"];
             }
             res = res + a;
-            count++;
         }
-        if (count === 0) {
-            is_empty = true;
-        }
-        if (is_empty === true) {
-            empty_basket.innerHTML = "Корзина пуста!"
-        } else {
-            let str = `В корзине: ${count} товаров на сумму ${res} рублей!`;
-            empty_basket.innerHTML = str;
-        }
+
+        let str = `Количество товара: ${count}. Сумма покупки: ${res} рублей!`;
+        my_basket.innerHTML = str;
+
 
     }
 }
 
 
 let my_basket = document.querySelector(".basket");
+my_basket.innerHTML = "Корзина пуста!";
 
-let empty_basket = document.createElement("p");
-empty_basket.className = 'basket_text';
 
 let products = document.querySelector(".products");
 
@@ -68,8 +57,6 @@ function product_view() {
         buy_button.innerHTML = "Купить!";
         buy_button.id = `${Product[count]["name"]}`
 
-
-
         let str = `Наименование товара: ${Product[count]["name"]}. Цена ${Product[count]["cost"]} рублей.`;
         my_product_text.innerHTML = str;
 
@@ -79,58 +66,26 @@ function product_view() {
 
         count++;
     }
-
-
-
 }
-
-
-
-
-my_basket.appendChild(empty_basket)
-
-
-
 
 product_view()
 
-// let val = 'PS'
-
-function Buy_Basket(val, count) {
+function Buy_Basket(val) {
     for (let i = 0; i < Product.length; i++) {
-
         if (val === Product[i]["name"]) {
-            Basket_Product.push(Product[i])
-            for (let a = 0; a < Basket_Product.length; a++) {
-                if (val === Basket_Product[a]['name']) {
-                    Basket_Product[a]['num'] = count
-                }
-            }
+            let count = Product[i]["num"];
+            Product[i]["num"] = count + 1
         }
     }
 
 }
 
+for (let i = 0; i < Product.length; i++) {
+    let str = `#${Product[i]["name"]}`;
 
-// let str = `#${Product[i]["name"]}`;
-
-document.querySelector("#Xbox")
-    .addEventListener('click', (e) => {
-        let count = 0;
-        count++
-        Buy_Basket(e.target.id, count)
-    })
-
-// document.querySelector("#PS")
-//     .addEventListener('click', (e) => {
-//         console.log('PS');
-//     })
-
-// document.querySelector("#PC")
-//     .addEventListener('click', (e) => {
-//         console.log('PC');
-//     })
-
-
-
-basket.countBasketPrice()
+    document.querySelector(str)
+        .addEventListener('click', (e) => {
+            Buy_Basket(e.target.id)
+            basket.countBasketPrice()
+        })
+}
